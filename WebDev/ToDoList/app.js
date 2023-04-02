@@ -5,40 +5,36 @@ const ejs = require('ejs');
 const app = express();
 app.set("view engine", "ejs");
 
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.listen(3000, function(){
     console.log("Server started on port 3000")
 });
 
+var items = [];
+
 app.get("/", function(req, res){
 
-
     var today = new Date();
-    var currentDay = today.getDay();
-    var day ="";
+    var options = { 
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long' 
+    };
 
-    if( currentDay === 0){
-        day = "Sunday";
-    }
-    else if( currentDay === 1){
-        day = "Monday";
-    }
-    else if( currentDay === 2){
-        day = "Tuesday";
-    }
-    else if( currentDay === 3){
-        day = "Wednesday";
-    }
-    else if( currentDay === 4){
-        day = "Thursday";
-    }
-    else if( currentDay === 5){
-        day = "Friday"; 
-    }
-    else if( currentDay === 6){
-        day = "Saturday";
-    }
+    //toDateString() is used to formate the date using the options object and locale string
+    var day = today.toLocaleDateString("en-US", options);
+
+    res.render("list", {kindOfDay: day, newListItemz: items});
+
+});
 
 
-    res.render("list", {kindOfDay: day});
+app.post("/", function(req, res){
 
+    console.log("Post request received");
+    var item = req.body.newItem;
+    items.push(item);
+    res.redirect("/");
+    
 });
