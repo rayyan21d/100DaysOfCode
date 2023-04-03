@@ -6,6 +6,13 @@ const app = express();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
+
+//Requiring a local module
+const day = require(__dirname + "/date.js");
+
+
+
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(3000, function(){
@@ -19,17 +26,8 @@ var workItems = [];
 
 app.get("/", function(req, res){
 
-    var today = new Date();
-    var options = { 
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long' 
-    };
-
-    //toDateString() is used to formate the date using the options object and locale string
-    var day = today.toLocaleDateString("en-US", options);
-
-    res.render("list", {ListTitle: day, newListItemz: items});
+    let date = day.getDate();
+    res.render("list", {ListTitle: date, newListItemz: items});
 
 });
 
