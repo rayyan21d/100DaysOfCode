@@ -37,9 +37,11 @@ app.get("/", function(req, res){
 app.post("/", function(req, res){
 
     let item = req.body.newItem;
+    console.log(req.body.button);
 
     //The list name is passed in the form of a hidden input which detects from where the post request is coming from
-    if(true) {
+    if(req.body.button == "Work") {
+        
         workItems.push(item);
         res.redirect("/work");
     }
@@ -55,3 +57,9 @@ app.get("/work", function(req, res){
     res.render("list", {ListTitle: "Work List", newListItemz: workItems});
 
 });
+
+
+
+app.get("/about", function(req, res){
+    res.render("about");
+})

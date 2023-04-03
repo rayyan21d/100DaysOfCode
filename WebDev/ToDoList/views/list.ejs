@@ -1,43 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("header") -%>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDoList</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
+<div class="box" id="heading">
+        <h1>
+                <%= ListTitle %>
+        </h1>
+</div>
 
-<body>
-
-        <div class="box" id="heading">
-                <h1>
-                        <%= ListTitle %>
-                </h1>
+<ul>
+        <div class="box">
+                <% for(var i=0; i< newListItemz.length ; i++ ){ %>
+                        <div class="item">
+                                <input type="checkbox">
+                                <p>
+                                        <%= newListItemz[i] %>
+                                </p>
+                        </div>
+                
+                <% }; %>
+                
         </div>
 
-        <ul>
-                <div class="box">
-                        <% for(var i=0; i< newListItemz.length ; i++ ){ %>
-                                <div class="item">
-                                        <input type="checkbox">
-                                        <p>
-                                                <%= newListItemz[i] %>
-                                        </p>
-                                </div>
-                
-                                <% }; %>
-                
-                </div>
-
-        </ul>
+</ul>
 
 
-        <form class="box item" action="/" method="post">
-                <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-                <button type="submit" name="button" value=<%= ListTitle %> >+</button>
-        </form>
-</body>
+<form class="box item" action="/" method="post">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <!-- A name:value pair is generated in the below line which is used to differentiate the calls also this value is space sensitive...-->
+        <button type="submit" name="button" value=<%= ListTitle %> >+</button>
+</form>
 
-</html>
+<%- include("footer") -%>
