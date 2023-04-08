@@ -11,25 +11,31 @@ mongoose.connect("mongodb://127.0.0.1/fruitsDB")
 
 //Creating a document in the collection
 const personSchema = new mongoose.Schema({
-    _id: Number,
+    id: Number,
     name: String,
     age: Number
 });
+
 //Creating a model
 const Person = mongoose.model("person", personSchema);
+
 //Creating a document
-const john = new Person({
-    id: 2,
+ const john = new Person({
+    id: 1,
     name: "John",
     age: 21
 });
+
 //Saving the document to the collection
-john.save();
+john.save().then(() => {
+    console.log("Document has been saved:", john);
+}).catch((error) => {
+    console.error("Error while saving document:", error);
+});
 
 
 
-
-
+//Inserting many documents to the collection
 const fruitSchema = new mongoose.Schema({
     name: String,
     rating: Number,
@@ -44,9 +50,6 @@ const apple = new Fruit({
     review: "Pretty solid as a fruit."
 });
 
-//applet.save();
-
-//Inserting many documents to the collection
 
 const kiwi = new Fruit({
     name: "Kiwi",
@@ -72,10 +75,21 @@ const banana = new Fruit({
     review: "Good for potassium."
 });
 
-Fruit.insertMany([kiwi, mango, orange, banana], (err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log("Successfully saved all the fruits to fruitsDB");
-    }
+Fruit.insertMany([apple, kiwi, mango, orange, banana]);
+
+Fruit.find().then ((fruits)=>{
+
+    fruits.forEach((fruit)=>{
+        console.log(fruit.name);
+    });    
+
+    //Close the connection
+    mongoose.connection.close();
+
+}).catch((err) => {
+    console.error(err);
 });
+
+
+
+
