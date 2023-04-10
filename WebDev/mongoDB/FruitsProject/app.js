@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 mongoose.connect("mongodb://127.0.0.1/fruitsDB")
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB!");
     })
     .catch((err) => {
         console.error(err);
@@ -37,10 +37,22 @@ john.save().then(() => {
 
 //Inserting many documents to the collection
 const fruitSchema = new mongoose.Schema({
-    name: String,
-    rating: Number,
+    name: {
+        type: String,
+        required: [true, "Please check your data entry, no name specified!"]
+    },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 10  
+    },
     review: String
 });
+
+
+/*---------------------------------------------------------*/
+
+
 
 const Fruit = mongoose.model("Fruit", fruitSchema);
 
@@ -49,7 +61,6 @@ const apple = new Fruit({
     rating: 7,
     review: "Pretty solid as a fruit."
 });
-
 
 const kiwi = new Fruit({
     name: "Kiwi",
@@ -77,6 +88,23 @@ const banana = new Fruit({
 
 Fruit.insertMany([apple, kiwi, mango, orange, banana]);
 
+
+
+//This will cause an error as name is required when saved!
+const fruit = new Fruit(
+    {
+        rating: 10,
+        review: "Peaches are so yummy!"
+    }
+);
+
+fruit.save().then(() => {
+    console.log("Fruit has been saved:", fruit);
+}).catch((error) => {
+    console.error("Error while saving fruit!! :", error);
+});
+
+
 Fruit.find().then ((fruits)=>{
 
     fruits.forEach((fruit)=>{
@@ -89,7 +117,6 @@ Fruit.find().then ((fruits)=>{
 }).catch((err) => {
     console.error(err);
 });
-
 
 
 
