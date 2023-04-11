@@ -50,7 +50,7 @@ const fruitSchema = new mongoose.Schema({
 });
 
 
-/*---------------------------------------------------------*/
+
 
 
 
@@ -104,9 +104,10 @@ fruit.save().then(() => {
     console.error("Error while saving fruit!! :", error);
 });
 
-
+//Reading Items
 Fruit.find().then ((fruits)=>{
 
+    //Prints all the documents in the collection
     fruits.forEach((fruit)=>{
         console.log(fruit.name);
     });    
@@ -119,4 +120,53 @@ Fruit.find().then ((fruits)=>{
 });
 
 
+//Updating Items
+Fruit.updateOne(
+    //First argument is the filter
+    {_id: "5f1f9b1b1b1b1b1b1b1b1b1b"},
+    //Second argument is the update
+    {name: "Peach"},    }
+).then(() => {
+    console.log("Successfully updated the document!");
+}).catch((err) => {
+    console.log(Error caught!! : err);
+});
 
+//Deleting Items
+Fruit.deleteOne(
+    //First argument is the filter
+    {_id: "5f1f9b1b1b1b1b1b1b1b1b1b"},
+).then(() => {
+    console.log("Successfully deleted the document!");
+}).catch((err) => {
+    console.log(Error caught!! : err);
+});
+
+//Deleting Many Items
+Person.deleteMany(
+    //First argument is the condition
+    {name: "john"},
+).then(() => {
+    console.log("Successfully deleted all the documents!");
+}
+)
+
+
+Fruit.findOneAndDelete(
+    {_id: "5f1f9b1b1b1b1b1b1b1b1b1b"},
+).then(() => {
+    console.log("Successfully deleted the document!");
+}).catch((err) => {
+    console.log(Error caught!! : err);
+});
+
+
+//Finds, fethces and deletes the document
+const fetched = Fruit.findOneAndRemove(
+    {_id: "5f1f9b1b1b1b1b1b1b1b1b1b"},
+).then(() => {
+    console.log("Successfully deleted the document!");
+}).catch((err) => { 
+    console.log(Error caught!! : err);
+}
+)
