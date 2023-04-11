@@ -9,31 +9,6 @@ mongoose.connect("mongodb://127.0.0.1/fruitsDB")
 });
 
 
-//Creating a document in the collection
-const personSchema = new mongoose.Schema({
-    id: Number,
-    name: String,
-    age: Number
-});
-
-//Creating a model
-const Person = mongoose.model("person", personSchema);
-
-//Creating a document
- const john = new Person({
-    id: 1,
-    name: "John",
-    age: 21
-});
-
-//Saving the document to the collection
-john.save().then(() => {
-    console.log("Document has been saved:", john);
-}).catch((error) => {
-    console.error("Error while saving document:", error);
-});
-
-
 
 //Inserting many documents to the collection
 const fruitSchema = new mongoose.Schema({
@@ -48,10 +23,6 @@ const fruitSchema = new mongoose.Schema({
     },
     review: String
 });
-
-
-
-
 
 
 const Fruit = mongoose.model("Fruit", fruitSchema);
@@ -125,11 +96,11 @@ Fruit.updateOne(
     //First argument is the filter
     {_id: "5f1f9b1b1b1b1b1b1b1b1b1b"},
     //Second argument is the update
-    {name: "Peach"},    }
+    {name: "Peach"}
 ).then(() => {
     console.log("Successfully updated the document!");
 }).catch((err) => {
-    console.log(Error caught!! : err);
+    console.log("Error caught!! :", err);
 });
 
 //Deleting Items
@@ -139,7 +110,7 @@ Fruit.deleteOne(
 ).then(() => {
     console.log("Successfully deleted the document!");
 }).catch((err) => {
-    console.log(Error caught!! : err);
+    console.log("Error caught!! :", err);
 });
 
 //Deleting Many Items
@@ -157,7 +128,7 @@ Fruit.findOneAndDelete(
 ).then(() => {
     console.log("Successfully deleted the document!");
 }).catch((err) => {
-    console.log(Error caught!! : err);
+    console.log("Error caught!! :", err);
 });
 
 
@@ -167,6 +138,64 @@ const fetched = Fruit.findOneAndRemove(
 ).then(() => {
     console.log("Successfully deleted the document!");
 }).catch((err) => { 
-    console.log(Error caught!! : err);
-}
-)
+    console.log("Error caught!! :", err);
+});
+
+
+
+
+
+
+
+//Creating a document in the collection
+const personSchema = new mongoose.Schema({
+    id: Number,
+    name: String,
+    age: Number,
+    favouriteFruit: fruitSchema
+});
+
+//Creating a model
+const Person = mongoose.model("person", personSchema);
+
+//Creating a document
+const john = new Person({
+    id: 1,
+    name: "John",
+    age: 21
+});
+
+//Saving the document to the collection
+john.save().then(() => {
+    console.log("Document has been saved:", john);
+}).catch((error) => {
+    console.error("Error while saving document:", error);
+});
+
+
+//Creating a new fruit 
+const pinapple= new Fruit({
+    name: "Pinapple",
+    score: 9,
+    review: "Great fruit."
+});
+
+pineapple.save();
+
+
+const person = new Person({
+    id: 2,
+    name: "Amy",
+    age: 20,
+    favouriteFruit: pineapple
+});
+
+//Updating John to have a fav fruit too!
+People.updateOne(
+    {name: "John"},
+    {favouriteFruit: pineapple}
+).then(() => {
+    console.log("Successfully updated the document!");
+}).catch((err) => {
+    console.log("Error caught!! :", err);
+});
