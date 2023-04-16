@@ -21,7 +21,7 @@ const itemSchema = {
 
 
 const Item = mongoose.model("Item", itemSchema);
-
+const listName = req.body.list;
 
 const item1 = new Item({
     name: "Welcome to your todolist!"
@@ -125,18 +125,35 @@ app.get("/:customListName", function(req, res){
 
     const customListName = req.params.customListName;
 
-    const list = new List({
-        name: customListName,
-        items: defaultItems
-    });
+    List.findOne({name : customListName}).then((foundList) => {
+        
+        if (!foundList) {
 
-    list.save().then(() => {
-        console.log("Successfully added new list");
+            //Creating a new list
+            const list = new List({
+                name: customListName,
+                items: defaultItems
+            });
+
+            //Saving the new list to the database
+            list.save().then(() => {
+                console.log("Successfully added new custom list");
+            }).catch((err) => {
+                console.log(err);
+            });
+
+            res.redirect("/" + customListName);
+            
+        }else {
+
+            //Show an existing list
+            res.render("list", { ListTitle: foundList.name, newListItemz: foundList.items });
+        
+        } });
+    
 
 
-    }).catch((err) => {
-        console.log(err);
-    });
+
 });
 
 
