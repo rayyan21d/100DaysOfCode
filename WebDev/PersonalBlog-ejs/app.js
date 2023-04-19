@@ -3,8 +3,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-
 const _ = require("lodash"); 
+
+//Requiring and connecting mongoose
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://127.0.0.1/personalBlogDB");
+
+//Creating a schema for the database
+const postSchema = new mongoose.Schema({
+  title: {type: String, required: true},
+  content: {type: String}
+});
+
+//Creating a model for the database
+const Post = mongoose.model("Post", postSchema);
+
 
 
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -13,7 +26,7 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 const app = express();
 
-const posts = [];
+
 
 
 app.set('view engine', 'ejs');
@@ -28,11 +41,17 @@ app.listen(3000, function () {
 
 app.get("/", function (req, res) {
 
-  res.render("home", {
-    homeStartingContent: homeStartingContent,
-    Posts: posts,
-  });
-})
+
+  Post.find({}).then( (posts) =>{
+
+    res.render("home", {
+      homeStartingContent: homeStartingContent,
+      Posts: posts
+    });
+
+  }).catch((err)=>{console.log(err)}); 
+
+});
 
 app.get("/about", function (req, res) {
 
@@ -52,37 +71,35 @@ app.get("/compose", function (req, res) {
 
 app.post("/compose", function (req, res) {
 
-  let obj = {
+  //Creating a new document in the database
+  let post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody
-  }
+  });
+ //Saving the document to the database
+  post.save().then((err) => {
+    if (err){
+      console.log(err);
+    } else{
+      console.log("Successfully saved to database");
+    }
+  });
 
-
-  posts.push(obj);
 
   res.redirect("/");
 
 });
 
 
-app.get("/post/:postName", function (req, res) {
-    
-  console.log(req.params.postName);
+app.get("/post/:postId", function (req, res) {
   
-  posts.forEach(function (post) {
-    if(_.lowerCase(post.title) === _.lowerCase(req.params.postName))
-    {
-      console.log("Match Found");
-      res.render("post", {
-        Title: post.title,
-        Content: post.content,
-       });
+  const requestedPostId = req.params.postId;
 
-    }
-    else{
-      console.log("Not Found");
-    }
-  });
-  
+  Post.findOne({_id: requestedPostId}).then((post)=>{
+    res.render("post", {
+      Title: post.title,
+      Content: post.content
+    });
+  }).catch((err)=>{console.log(err)});
 
 });

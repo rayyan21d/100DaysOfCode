@@ -4,17 +4,17 @@
 
 <p><%- homeStartingContent %></p>
 
-<% Posts.forEach(function(element) { %>
+<% Posts.forEach(function(post) { %>
 
     <div>
 
         <h1>
-            <%= element.title %>
+            <%= post.title %>
         </h1>
         <p>
-            <%= element.content.substring(0, 100)+ "...." %>
+            <%= post.content.substring(0, 100)+ "...." %>
         </p>
-        <a href= <%='/post/'+ element.title %> >
+        <a href= '/post/<%=post._id%>' >
             Read More
         </a>
 
