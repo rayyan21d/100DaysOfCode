@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const _ = require('lodash');
 //Requiring mongoose
 const mongoose = require('mongoose');
 
@@ -21,7 +22,7 @@ const itemSchema = {
 
 
 const Item = mongoose.model("Item", itemSchema);
-const listName = req.body.list;
+
 
 const item1 = new Item({
     name: "Welcome to your todolist!"
@@ -58,7 +59,7 @@ app.listen(3000, function(){
     console.log("Server started on port 3000")
 });
 
-//Todo list items log
+
 
 
 
@@ -96,34 +97,74 @@ app.get("/", function(req, res){
 app.post("/", function(req, res){
 
     const itemName = req.body.newItem;
+    const listName = req.body.list;
+
+    //console.log(listName);
+
     const item = new Item({
         name: itemName
     });
 
-    item.save().then(() =>{
-        console.log("Successfully added new item");
-    })
-    res.redirect("/");
+    //Checking if the submit button was pressed on localhost:3000 or a custom list page
+    if(listName == day.getDate() ){
+
+        item.save().then(() => {
+            console.log("Successfully added new item");
+        })
+        res.redirect("/");
+    }else {
+        
+        List.findOne({name: listName}).then((foundList) => {
+
+            foundList.items.push(item);
+            foundList.save().then(() => {
+                res.redirect("/" + listName);
+            });
+        });
+    }
+
 });
 
 
 app.post("/delete", function(req, res){
 
     const checkedItemId = req.body.checkbox;
-    Item.findByIdAndRemove(checkedItemId).then(() => {
-        console.log("Successfully deleted checked item");
-        res.redirect("/");
+    const listName = req.body.listName;
 
-    }).catch((err) => {
-        console.log(err);
-    });
+    //Checking if the delete button was pressed on localhost:3000 or a custom list page
+    if(listName == day.getDate() ){
+
+        Item.findByIdAndRemove(checkedItemId).then(() => {
+            console.log("Successfully deleted checked item");
+
+        }).catch((err) => {
+            console.log(err);
+        });
+        res.redirect("/");
+    }
+
+    //If the delete button was pressed on a custom list page
+    else{
+        Item.findByIdAndUpdate({name: listName}, { $pull: { items: { _id: checkedItemId } } }).then((foundList) => {
+
+            console.log("Successfully deleted checked item");
+            res.redirect("/" + listName);
+        
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    }
+
+
 });
 
 
 
 app.get("/:customListName", function(req, res){
 
-    const customListName = req.params.customListName;
+    const customListName = _.capitalize(req.params.customListName);
+
 
     List.findOne({name : customListName}).then((foundList) => {
         
@@ -135,6 +176,7 @@ app.get("/:customListName", function(req, res){
                 items: defaultItems
             });
 
+            
             //Saving the new list to the database
             list.save().then(() => {
                 console.log("Successfully added new custom list");
@@ -149,10 +191,9 @@ app.get("/:customListName", function(req, res){
             //Show an existing list
             res.render("list", { ListTitle: foundList.name, newListItemz: foundList.items });
         
-        } });
+        } 
+    });
     
-
-
 
 });
 

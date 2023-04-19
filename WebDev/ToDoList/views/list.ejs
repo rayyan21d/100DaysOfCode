@@ -16,6 +16,7 @@
                                                 <%= item.name %>
                                         </p>
                                 </div>
+                                <input type="hidden" name="listName" value="<%= ListTitle %>"> </input>
                 
                                 <% }); %>
                 
@@ -28,7 +29,7 @@
 <form class="box item" action="/" method="post">
         <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
         <!-- A name:value pair is generated in the below line which is used to differentiate the calls also this value is space sensitive...-->
-        <button type="submit" name="button" value=<%= ListTitle %> >+</button>
+        <button type="submit" name="list" value="<%= ListTitle %>" >+</button>
 </form>
 
 <%- include("footer") -%>
