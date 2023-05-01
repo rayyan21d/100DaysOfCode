@@ -1,8 +1,10 @@
 //jshint esversion:6
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const encrypt = require("mongoose-encryption");
 
 //Creating a URI for database using an IP address and setting up mongoose
 const URI = "mongodb://127.0.0.1:27017/userDB";
@@ -32,7 +34,9 @@ const isEmails = (email) => {
     // use a regular expression to validate the email format
     return /^\S+@\S+\.\S+$/.test(email);
 };
-const userSchema = {
+
+//Schema is created as an object
+const userSchema = new mongoose.Schema({
 
     email: { type: String, 
         required: [true, "Email field is required"], 
@@ -44,7 +48,11 @@ const userSchema = {
         minlength: [6, "Password must be at least 6 characters long"],
     }
     
-}
+});
+
+const secret = process.env.SECRET;
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ["password"]});
+
 
 const User = mongoose.model("User", userSchema);
 
