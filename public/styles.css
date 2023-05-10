@@ -9,7 +9,7 @@ img {
   filter: grayscale();
 }
 
-img:hover {
+img:focus {
   width: 200px;
   height: 200px;
   box-shadow: black;
