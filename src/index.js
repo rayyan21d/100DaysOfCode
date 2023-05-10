@@ -7,7 +7,7 @@ const image = "https://picsum.photos/200/300";
 ReactDOM.render(
   <div>
     <h1 className="heading" contentEditable="true" spellCheck="false">
-      Heading One@ {name}
+      Hi {name}
     </h1>
     <div className="gallery">
       <ul>
