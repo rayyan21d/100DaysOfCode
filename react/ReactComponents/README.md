@@ -1,2 +1,0 @@
-# ReactComponentJSX
-Created with CodeSandbox
