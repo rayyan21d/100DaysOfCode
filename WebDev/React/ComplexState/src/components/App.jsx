@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
 function App() {
-  const [fullName, setFullName] = useState({
+  const [contact, setContact] = useState({
     fName: "",
-    lName: ""
+    lName: "",
+    email: ""
   });
 
   function HandleNameChange(event) {
-    const { value:newValue, name:inputName } = event.target;
+    const { value: newValue, name: inputName } = event.target;
 
     //Instead of passing an object or a string we pass a function
-    setFullName((prevValue) => {
+    setContact((prevValue) => {
       if (inputName === "fName") {
         return {
           fName: newValue,
@@ -21,6 +22,12 @@ function App() {
           fName: prevValue.fName,
           lName: newValue
         };
+      } else if (inputName === "email") {
+        return {
+          fName: prevValue.fName,
+          lName: prevValue.lName,
+          email: newValue
+        };
       }
     });
   }
@@ -28,21 +35,21 @@ function App() {
   return (
     <div className="container">
       <h1>
-        Hello {fullName.fName} {fullName.lName}
+        Hello {contact.fName} {contact.lName}
       </h1>
+      <p>{contact.email}</p>
       <form>
         <input
           name="fName"
           onChange={HandleNameChange}
-          //value={firstName}
           placeholder="First Name"
         />
         <input
           name="lName"
           onChange={HandleNameChange}
-          //value={lastName}
           placeholder="Last Name"
         />
+        <input name="email" onChange={HandleNameChange} placeholder="Email" />
         <button>Submit</button>
       </form>
     </div>
