@@ -1,33 +1,47 @@
 import React, { useState } from "react";
 
 function App() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState({
+    fName: "",
+    lName: ""
+  });
 
-  function handlefNameChange(event) {
-    setFirstName(event.target.value);
-  }
+  function HandleNameChange(event) {
+    var newValue = event.target.value;
+    var inputName = event.target.name;
 
-  function handlelNameChange(event) {
-    setLastName(event.target.value);
+    //Instead of passing an object or a string we pass a function
+    setFullName((prevValue) => {
+      if (inputName === "fName") {
+        return {
+          fName: newValue,
+          lName: prevValue.lName
+        };
+      } else if (inputName === "lName") {
+        return {
+          fName: prevValue.fName,
+          lName: newValue
+        };
+      }
+    });
   }
 
   return (
     <div className="container">
       <h1>
-        Hello {firstName} {lastName}{" "}
+        Hello {fullName.fName} {fullName.lName}
       </h1>
       <form>
         <input
           name="fName"
-          onChange={handlefNameChange}
-          value={firstName}
+          onChange={HandleNameChange}
+          //value={firstName}
           placeholder="First Name"
         />
         <input
           name="lName"
-          onChange={handlelNameChange}
-          value={lastName}
+          onChange={HandleNameChange}
+          //value={lastName}
           placeholder="Last Name"
         />
         <button>Submit</button>
