@@ -7,8 +7,7 @@ function App() {
   });
 
   function HandleNameChange(event) {
-    var newValue = event.target.value;
-    var inputName = event.target.name;
+    const { value:newValue, name:inputName } = event.target;
 
     //Instead of passing an object or a string we pass a function
     setFullName((prevValue) => {
