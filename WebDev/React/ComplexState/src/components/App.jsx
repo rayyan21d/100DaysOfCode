@@ -12,23 +12,8 @@ function App() {
 
     //Instead of passing an object or a string we pass a function
     setContact((prevValue) => {
-      if (inputName === "fName") {
-        return {
-          fName: newValue,
-          lName: prevValue.lName
-        };
-      } else if (inputName === "lName") {
-        return {
-          fName: prevValue.fName,
-          lName: newValue
-        };
-      } else if (inputName === "email") {
-        return {
-          fName: prevValue.fName,
-          lName: prevValue.lName,
-          email: newValue
-        };
-      }
+      //Using the spread operator
+      return { ...prevValue, [inputName]: newValue };
     });
   }
 
